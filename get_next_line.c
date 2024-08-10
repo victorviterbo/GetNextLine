@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/10 15:27:12 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/10 15:45:48 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,12 @@ static t_open_lines	*init_line(int fd)
 	t_open_lines	*first;
 
 	last = NULL;
+	first = NULL;
 	if (g_current_lines)
 	{
 		current = *g_current_lines;
 		first = *g_current_lines;
+		printf("first = %p\n", first);
 		while (current)
 		{
 			write(1, "0", 1);
@@ -113,7 +115,6 @@ static t_open_lines	*init_line(int fd)
 	{
 		write(1, "1", 1);
 		g_current_lines = malloc(sizeof(t_open_lines *));
-		first = *g_current_lines;
 		if (!g_current_lines)
 			return (NULL);
 	}
@@ -140,7 +141,7 @@ static t_open_lines	*init_line(int fd)
 		write(1, "_____", 5);
 		printf("last->next %p->%p\n", last, current);
 		last->next = current;
+		*g_current_lines = first;
 	}
-	*g_current_lines = first;
 	return (current);
 }
