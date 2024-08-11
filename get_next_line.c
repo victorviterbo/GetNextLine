@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/11 09:43:55 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/11 11:15:19 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,17 @@ static t_open_lines	*init_line(int fd)
 		current = g_current_lines;
 		while (current->next)
 		{
+			//printf("current in loop = %p\n", current);
 			if (current->fd == fd)
 				return (current);
 			current = current->next;
+			//printf("next in loop = %p\n", current);
 		}
 		if (current->fd == fd)
-			return (current->next);
+			return (current);
 		current->next = malloc(sizeof(t_open_lines));
 		current = current->next;
+		//printf("adding to the stack %p\n", current);
 	}
 	else
 	{
@@ -89,6 +92,7 @@ static t_open_lines	*init_line(int fd)
 		if (!g_current_lines)
 			return (NULL);
 		current = g_current_lines;
+		//printf("adding to the stack %p\n", current);
 	}
 	current->current_line = malloc(1025 * sizeof(char));
 	if (!current->current_line)
