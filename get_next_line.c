@@ -6,13 +6,13 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/11 11:15:19 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/11 11:55:58 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static t_open_lines	*g_current_lines = NULL;
+static t_open_lines	*g_open_lines = NULL;
 
 char				*get_next_line(int fd);
 static t_open_lines	*init_line(int fd);
@@ -69,31 +69,23 @@ static t_open_lines	*init_line(int fd)
 {
 	t_open_lines	*current;
 
-	if (g_current_lines)
+	if (g_open_lines)
 	{
-		current = g_current_lines;
-		while (current->next)
-		{
-			//printf("current in loop = %p\n", current);
-			if (current->fd == fd)
-				return (current);
+		current = g_open_lines;
+		while (current->next && current->fd != fd)
 			current = current->next;
-			//printf("next in loop = %p\n", current);
-		}
 		if (current->fd == fd)
 			return (current);
 		current->next = malloc(sizeof(t_open_lines));
 		current = current->next;
-		//printf("adding to the stack %p\n", current);
 	}
 	else
 	{
-		g_current_lines = malloc(sizeof(t_open_lines));
-		if (!g_current_lines)
-			return (NULL);
-		current = g_current_lines;
-		//printf("adding to the stack %p\n", current);
+		g_open_lines = malloc(sizeof(t_open_lines));
+		current = g_open_lines;
 	}
+	if (!current)
+		return (NULL);
 	current->current_line = malloc(1025 * sizeof(char));
 	if (!current->current_line)
 		return (NULL);
