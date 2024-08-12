@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 23:36:10 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/12 23:37:53 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,11 @@ char	*get_next_line(int fd)
 		g_lst_files = malloc(sizeof(t_open_lines *));
 	if (!g_lst_files)
 		return (NULL);
-	//printf("%p\n", g_lst_files);
 	bytes_read = 1;
 	current = new_file(fd, g_lst_files);
-	//printf("%p\n", g_lst_files);
 	if (!(current) || !(current->current_line))
 		return (NULL);
 	line = ft_strdup(current->current_line);
-	//printf("line = %s\n", line);
 	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!new_block || !line)
 		return (NULL);
@@ -53,14 +50,10 @@ char	*get_next_line(int fd)
 	{
 		ft_strlcpy(current->current_line, ft_strchr(line, '\n') + 1,
 			ft_strlen(ft_strchr(line, '\n')));
-		//printf("line has been copied successfully ? : %s\n", (*current).current_line);
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
 	else
-	{
-		//printf("FREEING STRUCTURE MEMORY\n");
 		free_open_line(current, g_lst_files);
-	}
 	free(new_block);
 	return (line);
 }
@@ -89,17 +82,12 @@ static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files)
 		while (current->next && current->fd != fd)
 			current = current->next;
 		if (current->fd == fd)
-		{
-			//printf("returning struct with current_line %s\n", current->current_line);
 			return (current);
-		}
-		//printf("making new struct because cannot find old one\n");
 		current->next = malloc(sizeof(t_open_lines));
 		current = current->next;
 	}
 	else
 	{
-		//printf("starting from scratch...\n");
 		current = malloc(sizeof(t_open_lines));
 		*g_lst_files = current;
 	}
