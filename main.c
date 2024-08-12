@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 12:29:04 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 12:46:48 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:56:21 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(void)
 	// char	*line_3;
 	size_t	i = 0;
 
+	printf("BUFFER SIZE = %i\n", BUFFER_SIZE);
 	while (i < 24)
 	{
 		line_1 = get_next_line(fd1);
