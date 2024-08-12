@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 21:58:58 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/12 22:30:54 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(char *str);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void	ft_bzero(void *s, unsigned int n);
+void	*ft_calloc(size_t count, size_t size);
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -83,17 +83,21 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (i);
 }
 
-void	ft_bzero(void *s, unsigned int n)
+void	*ft_calloc(size_t count, size_t size)
 {
+	void			*ptr;
+	unsigned char	*bptr;
 	size_t			i;
-	unsigned char	*bs;
 
 	i = 0;
-	bs = (unsigned char *)s;
-	while (i < n)
+	ptr = malloc(count * size);
+	bptr = (unsigned char *)ptr;
+	if (!ptr)
+		return (NULL);
+	while (i < size)
 	{
-		*(bs + i) = 0;
+		*(bptr + i) = 0;
 		i++;
 	}
-	return ;
+	return (ptr);
 }

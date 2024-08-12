@@ -6,58 +6,60 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 22:01:57 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/12 23:36:10 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static t_open_lines	*g_lst_files = NULL;
-
 char				*get_next_line(int fd);
-static t_open_lines	*new_file(int fd);
+static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
 static char			*ft_strchr(char *str, char c);
-void				*ft_calloc(size_t count, size_t size);
-void				free_open_line(t_open_lines *todel);
+static void			free_open_line(t_open_lines *todel,
+						t_open_lines **g_lst_files);
 
 char	*get_next_line(int fd)
 {
-	char			*line;
-	char			*new_block;
-	t_open_lines	*current;
-	size_t			bytes_read;
+	char				*line;
+	char				*new_block;
+	t_open_lines		*current;
+	size_t				bytes_read;
+	static t_open_lines	**g_lst_files = NULL;
 
+	if (!g_lst_files)
+		g_lst_files = malloc(sizeof(t_open_lines *));
+	if (!g_lst_files)
+		return (NULL);
+	//printf("%p\n", g_lst_files);
 	bytes_read = 1;
-	current = new_file(fd);
-	printf("1\n");
+	current = new_file(fd, g_lst_files);
+	//printf("%p\n", g_lst_files);
 	if (!(current) || !(current->current_line))
 		return (NULL);
 	line = ft_strdup(current->current_line);
-	printf("2\n");
+	//printf("line = %s\n", line);
 	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!new_block || !line)
 		return (NULL);
-	printf("3\n");
 	while (ft_strchr(line, '\n') == NULL && bytes_read)
 	{
 		bytes_read = read(fd, new_block, BUFFER_SIZE);
 		*(new_block + bytes_read) = '\0';
 		line = ft_strjoin(line, new_block);
-		if (!line || ! *line)
+		if (!line || !*line)
 			return (NULL);
 	}
 	if (bytes_read)
 	{
-		printf("4\n");
 		ft_strlcpy(current->current_line, ft_strchr(line, '\n') + 1,
 			ft_strlen(ft_strchr(line, '\n')));
+		//printf("line has been copied successfully ? : %s\n", (*current).current_line);
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
 	else
 	{
-
-		printf("5\n");
-		free_open_line(current);
+		//printf("FREEING STRUCTURE MEMORY\n");
+		free_open_line(current, g_lst_files);
 	}
 	free(new_block);
 	return (line);
@@ -77,24 +79,29 @@ static char	*ft_strchr(char *str, char c)
 	return (NULL);
 }
 
-static t_open_lines	*new_file(int fd)
+static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files)
 {
 	t_open_lines	*current;
 
-	if (g_lst_files)
+	if (*g_lst_files)
 	{
-		current = g_lst_files;
+		current = *g_lst_files;
 		while (current->next && current->fd != fd)
 			current = current->next;
 		if (current->fd == fd)
+		{
+			//printf("returning struct with current_line %s\n", current->current_line);
 			return (current);
+		}
+		//printf("making new struct because cannot find old one\n");
 		current->next = malloc(sizeof(t_open_lines));
 		current = current->next;
 	}
 	else
 	{
-		g_lst_files = malloc(sizeof(t_open_lines));
-		current = g_lst_files;
+		//printf("starting from scratch...\n");
+		current = malloc(sizeof(t_open_lines));
+		*g_lst_files = current;
 	}
 	if (!current)
 		return (NULL);
@@ -106,25 +113,14 @@ static t_open_lines	*new_file(int fd)
 	return (current);
 }
 
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(count * size);
-	if (!ptr)
-		return (NULL);
-	ft_bzero(ptr, count);
-	return (ptr);
-}
-
-void	free_open_line(t_open_lines *todel)
+static void	free_open_line(t_open_lines *todel, t_open_lines **g_lst_files)
 {
 	t_open_lines	*current;
 
-	current = g_lst_files;
+	current = *g_lst_files;
 	if (current == todel)
 	{
-		g_lst_files = current->next;
+		*g_lst_files = current->next;
 		free(current->current_line);
 		free(current);
 		return ;
