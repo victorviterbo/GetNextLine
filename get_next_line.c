@@ -6,47 +6,57 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/11 11:55:58 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/12 13:30:48 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+#define BUFFER_SIZE 10
+
 
 static t_open_lines	*g_open_lines = NULL;
 
 char				*get_next_line(int fd);
 static t_open_lines	*init_line(int fd);
 static char			*ft_strchr(char *str, char c);
+void				*ft_calloc(size_t count, size_t size);
+void				ft_bzero(void *s, unsigned int n);
+void				free_open_line(t_open_lines *todel);
 
 char	*get_next_line(int fd)
 {
 	char			*line;
 	char			*new_block;
 	t_open_lines	*current;
+	size_t			bytes_read;
 
+	bytes_read = 1;
 	current = init_line(fd);
 	if (!(current) || !(current->current_line))
 		return (NULL);
 	line = ft_strdup(current->current_line);
-	new_block = malloc((1025) * sizeof(char));
+	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!new_block || !line)
 		return (NULL);
-	*(new_block + 1025) = '\0';
-	while (ft_strchr(line, '\n') == NULL)
+	while (ft_strchr(line, '\n') == NULL && bytes_read)
 	{
-		read(fd, new_block, 1024);
+		bytes_read = read(fd, new_block, BUFFER_SIZE);
+		*(new_block + bytes_read) = '\0';
 		line = ft_strjoin(line, new_block);
-		if (ft_strlen(new_block) < 1025)
-			break ;
+		if (!line)
+			return (NULL);
 	}
-	if (ft_strchr(line, '\n'))
+	if (bytes_read)
 	{
 		ft_strlcpy(current->current_line, ft_strchr(line, '\n') + 1,
-			ft_strlen(ft_strchr(line, '\n') + 1));
+			ft_strlen(ft_strchr(line, '\n')));
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
 	else
-		current->current_line = NULL;
+	{
+		free_open_line(current);
+	}
 	free(new_block);
 	return (line);
 }
@@ -86,11 +96,59 @@ static t_open_lines	*init_line(int fd)
 	}
 	if (!current)
 		return (NULL);
-	current->current_line = malloc(1025 * sizeof(char));
+	current->current_line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!current->current_line)
 		return (NULL);
-	*(current->current_line) = '\0';
 	current->fd = fd;
 	current->next = NULL;
 	return (current);
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*ptr;
+
+	ptr = malloc(count * size);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, count);
+	return (ptr);
+}
+
+void	ft_bzero(void *s, unsigned int n)
+{
+	size_t			i;
+	unsigned char	*bs;
+
+	i = 0;
+	bs = (unsigned char *)s;
+	while (i < n)
+	{
+		*(bs + i) = 0;
+		i++;
+	}
+	return ;
+}
+
+void	free_open_line(t_open_lines *todel)
+{
+	t_open_lines	*current;
+
+	current = g_open_lines;
+	if (current == todel)
+	{
+		g_open_lines = current->next;
+		free(current->current_line);
+		free(current);
+	}
+	while (current->next && current->next != todel)
+	{
+		current = current->next;
+	}
+	if (current->next != todel)
+		return ;
+	current->next = current->next->next;
+	free(current->next->current_line);
+	free(current->next);
+	return ;
 }
