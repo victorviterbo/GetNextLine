@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 23:38:30 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/13 07:29:05 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <stddef.h>
@@ -24,10 +24,7 @@ typedef struct s_open_lines{
 }	t_open_lines;
 
 char				*get_next_line(int fd);
-static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
-static char			*ft_strchr(char *str, char c);
-static void			free_open_line(t_open_lines *todel,
-						t_open_lines **g_lst_files);
+char				*ft_strchr(char *str, char c);
 char				*ft_strjoin(char const *s1, char const *s2);
 size_t				ft_strlen(char *str);
 char				*ft_strdup(const char *s1);

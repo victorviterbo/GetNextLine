@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/13 07:05:20 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/13 07:29:34 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char				*get_next_line(int fd);
 static char			*agglutinate(int fd, t_open_lines **g_lst_files,
@@ -18,7 +18,7 @@ static char			*agglutinate(int fd, t_open_lines **g_lst_files,
 static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
 static void			free_open_line(t_open_lines *todel,
 						t_open_lines **g_lst_files);
-static char			*ft_strchr(char *str, char c);
+char				*ft_strchr(char *str, char c);
 
 char	*get_next_line(int fd)
 {
@@ -124,7 +124,7 @@ static void	free_open_line(t_open_lines *todel, t_open_lines **g_lst_files)
 	return ;
 }
 
-static char	*ft_strchr(char *str, char c)
+char	*ft_strchr(char *str, char c)
 {
 	size_t	i;
 
