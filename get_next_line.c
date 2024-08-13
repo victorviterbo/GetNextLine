@@ -6,35 +6,45 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 23:37:53 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/13 07:05:20 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 char				*get_next_line(int fd);
+static char			*agglutinate(int fd, t_open_lines **g_lst_files,
+						t_open_lines *current, char *line);
 static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
-static char			*ft_strchr(char *str, char c);
 static void			free_open_line(t_open_lines *todel,
 						t_open_lines **g_lst_files);
+static char			*ft_strchr(char *str, char c);
 
 char	*get_next_line(int fd)
 {
 	char				*line;
-	char				*new_block;
 	t_open_lines		*current;
-	size_t				bytes_read;
 	static t_open_lines	**g_lst_files = NULL;
 
 	if (!g_lst_files)
 		g_lst_files = malloc(sizeof(t_open_lines *));
 	if (!g_lst_files)
 		return (NULL);
-	bytes_read = 1;
 	current = new_file(fd, g_lst_files);
 	if (!(current) || !(current->current_line))
 		return (NULL);
 	line = ft_strdup(current->current_line);
+	line = agglutinate(fd, g_lst_files, current, line);
+	return (line);
+}
+
+static char	*agglutinate(int fd, t_open_lines **g_lst_files,
+	t_open_lines *current, char *line)
+{
+	size_t	bytes_read;
+	char	*new_block;
+
+	bytes_read = 1;
 	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	if (!new_block || !line)
 		return (NULL);
@@ -56,20 +66,6 @@ char	*get_next_line(int fd)
 		free_open_line(current, g_lst_files);
 	free(new_block);
 	return (line);
-}
-
-static char	*ft_strchr(char *str, char c)
-{
-	size_t	i;
-
-	i = 0;
-	while (*(str + i))
-	{
-		if (*(str + i) == c)
-			return (str + i);
-		i++;
-	}
-	return (NULL);
 }
 
 static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files)
@@ -111,6 +107,11 @@ static void	free_open_line(t_open_lines *todel, t_open_lines **g_lst_files)
 		*g_lst_files = current->next;
 		free(current->current_line);
 		free(current);
+		if (!*g_lst_files)
+		{
+			free(g_lst_files);
+			g_lst_files = NULL;
+		}
 		return ;
 	}
 	while (current->next && current->next != todel)
@@ -121,4 +122,18 @@ static void	free_open_line(t_open_lines *todel, t_open_lines **g_lst_files)
 	free(current->next->current_line);
 	free(current->next);
 	return ;
+}
+
+static char	*ft_strchr(char *str, char c)
+{
+	size_t	i;
+
+	i = 0;
+	while (*(str + i))
+	{
+		if (*(str + i) == c)
+			return (str + i);
+		i++;
+	}
+	return (NULL);
 }

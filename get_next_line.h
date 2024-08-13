@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/12 23:13:48 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/08/12 23:38:30 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ typedef struct s_open_lines{
 	char				*current_line;
 	struct s_open_lines	*next;
 }	t_open_lines;
-
 
 char				*get_next_line(int fd);
 static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
