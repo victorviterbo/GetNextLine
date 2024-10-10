@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/13 07:42:00 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:54:38 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	unsigned int	i;
 	unsigned int	j;
 
-	joined = malloc((ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1)
-			* sizeof(char));
+	joined = ft_calloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1,
+			sizeof(char));
 	if (!joined)
 		return (NULL);
 	i = 0;
@@ -43,6 +43,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 		j++;
 	}
+	*(joined + j) = '\0';
 	return (joined);
 }
 
@@ -51,6 +52,8 @@ size_t	ft_strlen(char *str)
 	size_t	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (*(str + i))
 		i++;
 	return (i);
@@ -60,12 +63,13 @@ char	*ft_strdup(const char *s1)
 {
 	char	*duplicate;
 
-	duplicate = malloc((ft_strlen((char *)s1) + 1) * sizeof(char));
+	duplicate = ft_calloc((ft_strlen((char *)s1) + 1), sizeof(char));
 	if (!duplicate)
 		return (NULL);
 	ft_strlcpy(duplicate, s1, ft_strlen((char *)s1) + 1);
 	return (duplicate);
 }
+
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
