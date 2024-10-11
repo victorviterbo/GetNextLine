@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 14:37:07 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:49:51 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ char	*get_next_line(int fd)
 	if (!(current) || !(current->current_line))
 		return (NULL);
 	line = ft_strdup(current->current_line);
+	if (!line)
+		return (NULL);
 	line = agglutinate(fd, g_lst_files, current, line);
 	return (line);
 }
@@ -52,7 +54,7 @@ static char	*agglutinate(int fd, t_open_lines **g_lst_files,
 	{
 		bytes_read = read(fd, new_block, BUFFER_SIZE);
 		*(new_block + bytes_read) = '\0';
-		line = ft_strjoin(line, new_block);
+		line = ft_strjoin(line, new_block, 1);
 		if (!line || !*line)
 			return (NULL);
 	}
