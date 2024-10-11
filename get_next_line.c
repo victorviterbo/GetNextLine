@@ -6,66 +6,94 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 14:29:21 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:43:59 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 char		*get_next_line(int fd);
-static char	*agglutinate(int fd, char **g_lst_files, char *line);
 char		*ft_strchr(const char *s, int c);
-static void	free_lst_files(char **g_lst_files);
+void		ft_bzero(void *s, unsigned int n);
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*g_lst_files = NULL;
+	static char	g_lst_files[BUFFER_SIZE + 1];
+	size_t		bytes_read;
 
-	if (!g_lst_files)
-		g_lst_files = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	if (!g_lst_files)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	//line = agglutinate(fd, g_lst_files, line);size_t	bytes_read;
 	line = ft_strdup(g_lst_files);
 	if (!line)
 		return (NULL);
-	line = agglutinate(fd, &g_lst_files, line);
-	return (line);
-}
-
-static char	*agglutinate(int fd, char **g_lst_files, char *line)
-{
-	size_t	bytes_read;
-	char	*new_block;
-
 	bytes_read = 1;
-	if (!line)
-		return (NULL);
-	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	if (!new_block)
-		return (NULL);
 	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
-		bytes_read = read(fd, new_block, BUFFER_SIZE);
-		*(new_block + bytes_read) = '\0';
-		line = ft_strjoin(line, new_block, 1);
-		if (!line || !*line)
+		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
+		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 		{
-			free(new_block);
+			free(line);
+			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+			printf("exit 1\n");
+			return (NULL);
+		}
+		line = ft_strjoin(line, g_lst_files, 1);
+		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+		if (!line)
+		{
+			printf("exit 2\n");
 			return (NULL);
 		}
 	}
-	if (bytes_read)
+	if (bytes_read > 0)
 	{
-		ft_strlcpy(*g_lst_files, ft_strchr(line, '\n') + 1,
+		ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
 			ft_strlen(ft_strchr(line, '\n')));
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
-	else
-		free_lst_files(g_lst_files);
-	free(new_block);
+	printf("exit 3\n");
 	return (line);
 }
+
+
+/*
+static char	*agglutinate(int fd, char *g_lst_files, char *line);
+static char	*agglutinate(int fd, char *g_lst_files, char *line)
+{
+	size_t	bytes_read;
+
+	bytes_read = 1;
+	ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
+	{
+		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
+		if (bytes_read < 0 || bytes_read > BUFFER_SIZE)
+		{
+			free(line);
+			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+			printf("exit 1\n");
+			return (NULL);
+		}
+		line = ft_strjoin(line, g_lst_files, 1);
+		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+		if (!line)
+		{
+			printf("exit 2\n");
+			return (NULL);
+		}
+	}
+	if (bytes_read > 0)
+	{
+		ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
+			ft_strlen(ft_strchr(line, '\n')));
+		*(ft_strchr(line, '\n') + 1) = '\0';
+	}
+	printf("exit 3\n");
+	return (line);
+}
+*/
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -86,9 +114,28 @@ char	*ft_strchr(const char *s, int c)
 		return (NULL);
 }
 
+/*
+
+static void	free_lst_files(char **g_lst_files);
 static void	free_lst_files(char **g_lst_files)
 {
 	free(*g_lst_files);
 	*g_lst_files = NULL;
+	return ;
+}
+*/
+
+void	ft_bzero(void *s, unsigned int n)
+{
+	size_t			i;
+	unsigned char	*bs;
+
+	i = 0;
+	bs = (unsigned char *)s;
+	while (i < n)
+	{
+		*(bs + i) = 0;
+		i++;
+	}
 	return ;
 }
