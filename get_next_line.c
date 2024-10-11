@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 16:43:59 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:06:26 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,33 @@ char	*get_next_line(int fd)
 	static char	g_lst_files[BUFFER_SIZE + 1];
 	size_t		bytes_read;
 
+	bytes_read = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	//line = agglutinate(fd, g_lst_files, line);size_t	bytes_read;
 	line = ft_strdup(g_lst_files);
+	ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 	if (!line)
 		return (NULL);
-	bytes_read = 1;
 	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
 		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
+		if (bytes_read == 0 && *line)
+		{
+			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+			return (line);
+		}
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 		{
 			free(line);
 			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
-			printf("exit 1\n");
+			//printf("exit 1\n");
 			return (NULL);
 		}
 		line = ft_strjoin(line, g_lst_files, 1);
 		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 		if (!line)
 		{
-			printf("exit 2\n");
+			//printf("exit 2\n");
 			return (NULL);
 		}
 	}
@@ -53,7 +58,7 @@ char	*get_next_line(int fd)
 			ft_strlen(ft_strchr(line, '\n')));
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
-	printf("exit 3\n");
+	//printf("exit 3\n");
 	return (line);
 }
 
