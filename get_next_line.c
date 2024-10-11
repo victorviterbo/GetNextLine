@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 18:06:26 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:10:58 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,12 @@ char	*get_next_line(int fd)
 		{
 			free(line);
 			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
-			//printf("exit 1\n");
 			return (NULL);
 		}
 		line = ft_strjoin(line, g_lst_files, 1);
 		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 		if (!line)
-		{
-			//printf("exit 2\n");
 			return (NULL);
-		}
 	}
 	if (bytes_read > 0)
 	{
@@ -58,7 +54,6 @@ char	*get_next_line(int fd)
 			ft_strlen(ft_strchr(line, '\n')));
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
-	//printf("exit 3\n");
 	return (line);
 }
 

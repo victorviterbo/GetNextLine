@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 14:49:09 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:17:34 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	*ft_calloc(size_t count, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 {
 	char			*joined;
-	unsigned int	i;
-	unsigned int	j;
 
 	joined = ft_calloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1,
 			sizeof(char));
@@ -35,15 +33,7 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 		return (NULL);
 	}
 	ft_strlcpy(joined, s1, ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
-	i = 0;
-	j = ft_strlen((char *)s1);
-	while (*(s2 + i))
-	{
-		*(joined + j) = *(s2 + i);
-		i++;
-		j++;
-	}
-	*(joined + j) = '\0';
+	ft_strlcpy(joined + ft_strlen((char *)s1), s2, ft_strlen((char *)s2) + 1);
 	if (in_place == 1)
 		free((void *)s1);
 	else if (in_place == 2)
