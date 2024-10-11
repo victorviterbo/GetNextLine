@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 18:29:06 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:33:32 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static char	*agglutinate(int fd, char *g_lst_files, char *line)
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 		{
 			free(line);
-			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 			return (NULL);
 		}
 		line = ft_strjoin(line, g_lst_files, 1);
@@ -56,12 +55,9 @@ static char	*agglutinate(int fd, char *g_lst_files, char *line)
 		if (!line)
 			return (NULL);
 	}
-	if (bytes_read > 0)
-	{
-		ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
-			ft_strlen(ft_strchr(line, '\n')));
-		*(ft_strchr(line, '\n') + 1) = '\0';
-	}
+	ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
+		ft_strlen(ft_strchr(line, '\n')));
+	*(ft_strchr(line, '\n') + 1) = '\0';
 	return (line);
 }
 

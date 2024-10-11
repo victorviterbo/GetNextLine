@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 12:29:04 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 16:46:26 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:31:26 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 int	main(void)
 {
-	int		fd1 = open("exemple1.txt", O_RDONLY);//open("empty.txt", O_RDONLY);//
+	int		fd1 = open("empty.txt", O_RDONLY);//open("exemple1.txt", O_RDONLY);//
 	char	*line_1;
 	size_t	i = 0;
 

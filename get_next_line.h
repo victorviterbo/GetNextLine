@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 16:37:33 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:34:04 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,6 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <unistd.h>
-
-
-
-# include <libc.h>
-
-
-
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
