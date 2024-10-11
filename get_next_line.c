@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/10 15:54:39 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:29:21 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 char		*get_next_line(int fd);
 static char	*agglutinate(int fd, char **g_lst_files, char *line);
-char		*ft_strchr(char *str, char c);
+char		*ft_strchr(const char *s, int c);
+static void	free_lst_files(char **g_lst_files);
 
 char	*get_next_line(int fd)
 {
@@ -22,10 +23,7 @@ char	*get_next_line(int fd)
 	static char	*g_lst_files = NULL;
 
 	if (!g_lst_files)
-	{
 		g_lst_files = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-		line = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	}
 	if (!g_lst_files)
 		return (NULL);
 	line = ft_strdup(g_lst_files);
@@ -41,16 +39,21 @@ static char	*agglutinate(int fd, char **g_lst_files, char *line)
 	char	*new_block;
 
 	bytes_read = 1;
-	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	if (!new_block || !line)
+	if (!line)
 		return (NULL);
-	while (ft_strchr(line, '\n') == NULL && bytes_read)
+	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+	if (!new_block)
+		return (NULL);
+	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
 		bytes_read = read(fd, new_block, BUFFER_SIZE);
 		*(new_block + bytes_read) = '\0';
-		line = ft_strjoin(line, new_block);
+		line = ft_strjoin(line, new_block, 1);
 		if (!line || !*line)
+		{
+			free(new_block);
 			return (NULL);
+		}
 	}
 	if (bytes_read)
 	{
@@ -59,28 +62,33 @@ static char	*agglutinate(int fd, char **g_lst_files, char *line)
 		*(ft_strchr(line, '\n') + 1) = '\0';
 	}
 	else
-	{
-		free(*g_lst_files);
-		*g_lst_files = NULL;
-	}
+		free_lst_files(g_lst_files);
 	free(new_block);
 	return (line);
 }
 
-char	*ft_strchr(char *str, char c)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
+	size_t			i;
+	unsigned char	uc;
 
 	i = 0;
-	if (!str)
-		return (NULL);
-	//printf("searching >%c<\n", c);
-	//printf("searching >%c< in >%s<\n", c, str);
-	while (*(str + i))
+	uc = (unsigned char)c;
+	while (*(s + i))
 	{
-		if (*(str + i) == c)
-			return (str + i);
+		if ((unsigned char)*(s + i) == uc)
+			return ((char *)s + i);
 		i++;
 	}
-	return (NULL);
+	if (c == '\0')
+		return ((char *)s + i);
+	else
+		return (NULL);
+}
+
+static void	free_lst_files(char **g_lst_files)
+{
+	free(*g_lst_files);
+	*g_lst_files = NULL;
+	return ;
 }

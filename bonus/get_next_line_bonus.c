@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/10 15:54:35 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:45:49 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char			*agglutinate(int fd, t_open_lines **g_lst_files,
 static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
 static void			free_open_line(t_open_lines *todel,
 						t_open_lines **g_lst_files);
-char				*ft_strchr(char *str, char c);
+char				*ft_strchr(const char *s, int c);
 
 char	*get_next_line(int fd)
 {
@@ -27,7 +27,7 @@ char	*get_next_line(int fd)
 	static t_open_lines	**g_lst_files = NULL;
 
 	if (!g_lst_files)
-		g_lst_files = malloc(sizeof(t_open_lines *));
+		g_lst_files = ft_calloc(1, sizeof(t_open_lines *));
 	if (!g_lst_files)
 		return (NULL);
 	current = new_file(fd, g_lst_files);
@@ -124,16 +124,21 @@ static void	free_open_line(t_open_lines *todel, t_open_lines **g_lst_files)
 	return ;
 }
 
-char	*ft_strchr(char *str, char c)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
+	size_t			i;
+	unsigned char	uc;
 
 	i = 0;
-	while (*(str + i))
+	uc = (unsigned char)c;
+	while (*(s + i))
 	{
-		if (*(str + i) == c)
-			return (str + i);
+		if ((unsigned char)*(s + i) == uc)
+			return ((char *)s + i);
 		i++;
 	}
-	return (NULL);
+	if (c == '\0')
+		return ((char *)s + i);
+	else
+		return (NULL);
 }
