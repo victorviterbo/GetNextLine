@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 18:49:44 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:15:07 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <unistd.h>
+
+
+
+
+
+#include <libc.h>
+
+
+
 
 typedef struct s_open_lines{
 	int					fd;
