@@ -6,131 +6,60 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 19:31:54 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 21:46:31 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
 char				*get_next_line(int fd);
-static char			*agglutinate(int fd, t_open_lines **g_lst_files,
-						t_open_lines *current, char *line);
-static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files);
-static void			free_open_line(t_open_lines *todel,
-						t_open_lines **g_lst_files);
+static char			*agglutinate(int fd, char *g_lst_files, char *line);
 char				*ft_strchr(const char *s, int c);
 
 void				ft_bzero(void *s, unsigned int n);
 
 char	*get_next_line(int fd)
 {
-	char				*line;
-	t_open_lines		*current;
-	static t_open_lines	**g_lst_files = NULL;
+	char		*line;
+	static char	g_lst_files[(BUFFER_SIZE + 1) * 123] = "";
 
-	printf("0 current fid = %i\n", fd);
-	if (!g_lst_files)
-		g_lst_files = ft_calloc(1, sizeof(t_open_lines *));
-	if (!g_lst_files)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	current = new_file(fd, g_lst_files);
-	if (!(current) || !(current->current_line))
-		return (NULL);
-	line = ft_strdup(current->current_line);
+	line = ft_strdup(g_lst_files + (fd * (BUFFER_SIZE + 1)));
 	if (!line)
 		return (NULL);
-	line = agglutinate(fd, g_lst_files, current, line);
-	printf("COUCOU\n");
+	line = agglutinate(fd, g_lst_files + (fd * (BUFFER_SIZE + 1)), line);
 	return (line);
 }
 
-static char	*agglutinate(int fd, t_open_lines **g_lst_files,
-	t_open_lines *current, char *line)
+static char	*agglutinate(int fd, char *g_lst_files, char *line)
 {
 	size_t	bytes_read;
 
 	bytes_read = 1;
 	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
-		bytes_read = read(fd, current->current_line, BUFFER_SIZE);
+		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
 		if (bytes_read == 0 && *line)
 		{
-			free_open_line(current, g_lst_files);
+			ft_bzero(g_lst_files, BUFFER_SIZE);
 			return (line);
 		}
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 		{
-			free_open_line(current, g_lst_files);
+			ft_bzero(g_lst_files, BUFFER_SIZE);
 			free(line);
 			return (NULL);
 		}
-		line = ft_strjoin(line, current->current_line, 1);
-		ft_bzero(current->current_line, BUFFER_SIZE);
+		line = ft_strjoin(line, g_lst_files, 1);
+		ft_bzero(g_lst_files, BUFFER_SIZE);
 		if (!line)
 			return (NULL);
 	}
-	ft_strlcpy(current->current_line, ft_strchr(line, '\n') + 1,
+	ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
 		ft_strlen(ft_strchr(line, '\n')));
 	*(ft_strchr(line, '\n') + 1) = '\0';
 	return (line);
-}
-
-static t_open_lines	*new_file(int fd, t_open_lines **g_lst_files)
-{
-	t_open_lines	*current;
-
-	if (*g_lst_files)
-	{
-		current = *g_lst_files;
-		while (current->next && current->fd != fd)
-			current = current->next;
-		if (current->fd == fd)
-			return (current);
-		current->next = malloc(sizeof(t_open_lines));
-		current = current->next;
-	}
-	else
-	{
-		current = malloc(sizeof(t_open_lines));
-		*g_lst_files = current;
-	}
-	if (!current)
-		return (NULL);
-	current->current_line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!current->current_line)
-		return (NULL);
-	current->fd = fd;
-	current->next = NULL;
-	return (current);
-}
-
-static void	free_open_line(t_open_lines *todel, t_open_lines **g_lst_files)
-{
-	t_open_lines	*current;
-	t_open_lines	*next;
-
-	current = *g_lst_files;
-	if (current == todel)
-	{
-		*g_lst_files = current->next;
-		free(current->current_line);
-		free(current);
-		if (!*g_lst_files)
-		{
-			free(g_lst_files);
-			g_lst_files = NULL;
-		}
-		return ;
-	}
-	while (current->next && current->next != todel)
-		current = current->next;
-	if (current->next != todel)
-		return ;
-	next = current->next->next;
-	free(current->next->current_line);
-	free(current->next);
-	current->next = next;
-	return ;
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -166,35 +95,3 @@ void	ft_bzero(void *s, unsigned int n)
 	}
 	return ;
 }
-
-/*
-static char	*agglutinate(int fd, t_open_lines **g_lst_files,
-	t_open_lines *current, char *line)
-{
-	size_t	bytes_read;
-	char	*new_block;
-
-	bytes_read = 1;
-	new_block = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	if (!new_block || !line)
-		return (NULL);
-	while (ft_strchr(line, '\n') == NULL && bytes_read)
-	{
-		bytes_read = read(fd, new_block, BUFFER_SIZE);
-		*(new_block + bytes_read) = '\0';
-		line = ft_strjoin(line, new_block, 1);
-		if (!line || !*line)
-			return (NULL);
-	}
-	if (bytes_read)
-	{
-		ft_strlcpy(current->current_line, ft_strchr(line, '\n') + 1,
-			ft_strlen(ft_strchr(line, '\n')));
-		*(ft_strchr(line, '\n') + 1) = '\0';
-	}
-	else
-		free_open_line(current, g_lst_files);
-	free(new_block);
-	return (line);
-}
-*/

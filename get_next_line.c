@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 19:03:27 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 21:23:49 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void		ft_bzero(void *s, unsigned int n);
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	g_lst_files[BUFFER_SIZE + 1];
+	static char	g_lst_files[BUFFER_SIZE + 1] = "";
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -79,17 +79,6 @@ char	*ft_strchr(const char *s, int c)
 	else
 		return (NULL);
 }
-
-/*
-
-static void	free_lst_files(char **g_lst_files);
-static void	free_lst_files(char **g_lst_files)
-{
-	free(*g_lst_files);
-	*g_lst_files = NULL;
-	return ;
-}
-*/
 
 void	ft_bzero(void *s, unsigned int n)
 {

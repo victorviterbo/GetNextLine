@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 19:15:07 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/11 21:40:48 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,6 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <unistd.h>
-
-
-
-
-
-#include <libc.h>
-
-
-
-
-typedef struct s_open_lines{
-	int					fd;
-	char				*current_line;
-	struct s_open_lines	*next;
-}	t_open_lines;
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
