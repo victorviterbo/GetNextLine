@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/08/13 07:52:50 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:49:53 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*agglutinate(int fd, char *g_lst_files, char *line)
 	while (ft_strchr(line, '\n') == NULL && bytes_read)
 	{
 		bytes_read = read(fd, new_block, BUFFER_SIZE);
-		*(new_block + bytes_read) = '\0';
+		*(new_block + bytes_read) = '\0'; //TODO check +1 ?
 		line = ft_strjoin(line, new_block);
 		if (!line || !*line)
 			return (NULL);
