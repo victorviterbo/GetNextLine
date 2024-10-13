@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 19:33:00 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 19:36:49 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,12 @@ char	*get_next_line(int fd)
 	if (ft_strchr(current, '\n'))
 	{
 		linelen = ft_strchr(current, '\n') - current + 2;
+		printf("chars are %c, %c, %c\n", *(ft_strchr(current, '\n') - 1), *ft_strchr(current, '\n'), *(ft_strchr(current, '\n') + 1));
 		line = ft_strndup(current, linelen);
 		if (!line)
 			return (NULL);
 		ft_strlcpy(current, ft_strchr(current, '\n') + 1,
-			BUFFER_SIZE - (int)(ft_strchr(current, '\n') - current));
+			BUFFER_SIZE - (int)(ft_strchr(current, '\n') - current) + 1);
 		ft_bzero(current + 1 + ft_strlen(current),
 			BUFFER_SIZE + 1 - linelen);
 		return (line);
