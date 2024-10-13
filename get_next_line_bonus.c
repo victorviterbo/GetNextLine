@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 16:45:50 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 19:33:00 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,28 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	g_lst_files[(BUFFER_SIZE + 1) * FD_MAX] = "";
 	char		*current;
-	char		*remainder;
+	size_t		linelen;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
-	remainder = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
-	line = ft_strndup(current, ft_strchr(current, '\n') - current + 1);
+	if (ft_strchr(current, '\n'))
+	{
+		linelen = ft_strchr(current, '\n') - current + 2;
+		line = ft_strndup(current, linelen);
+		if (!line)
+			return (NULL);
+		ft_strlcpy(current, ft_strchr(current, '\n') + 1,
+			BUFFER_SIZE - (int)(ft_strchr(current, '\n') - current));
+		ft_bzero(current + 1 + ft_strlen(current),
+			BUFFER_SIZE + 1 - linelen);
+		return (line);
+	}
+	line = ft_strndup(current, ft_strlen(current) + 1);
 	if (!line)
 		return (NULL);
-	if (ft_strchr(line, '\n'))
-	{
-		ft_strlcpy(remainder, ft_strchr(line, '\n'),
-			ft_strlen(ft_strchr(line, '\n')) + 1);
-	}
 	ft_bzero(current, BUFFER_SIZE + 1);
 	line = agglutinate(fd, current, line);
-	if (*remainder)
-		ft_strlcpy(current, remainder, ft_strlen(remainder) + 1);
-	free(remainder);
 	return (line);
 }
 

@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 16:44:30 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 18:22:13 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+
+#include <libc.h>
+
+
 
 # ifndef FD_MAX
 #  define FD_MAX 13

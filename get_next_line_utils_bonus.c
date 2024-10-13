@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 16:45:05 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 18:47:57 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	size_t	i;
 
 	i = 0;
+	if (!src || !dst)
+		return (0);
 	while (*(src + i) && i + 1 < dstsize)
 	{
 		*(dst + i) = *(src + i);
