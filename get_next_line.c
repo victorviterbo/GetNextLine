@@ -6,16 +6,16 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 21:23:49 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 15:30:17 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char		*get_next_line(int fd);
-static char	*agglutinate(int fd, char *g_lst_files, char *line);
-char		*ft_strchr(const char *s, int c);
-void		ft_bzero(void *s, unsigned int n);
+char	*get_next_line(int fd);
+char	*agglutinate(int fd, char *g_lst_files, char *line);
+char	*ft_strchr(const char *s, int c);
+void	ft_bzero(void *s, unsigned int n);
 
 char	*get_next_line(int fd)
 {
@@ -32,7 +32,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-static char	*agglutinate(int fd, char *g_lst_files, char *line)
+char	*agglutinate(int fd, char *g_lst_files, char *line)
 {
 	size_t	bytes_read;
 
@@ -40,12 +40,11 @@ static char	*agglutinate(int fd, char *g_lst_files, char *line)
 	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
 		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
-		if (bytes_read == 0 && *line)
-		{
-			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
-			return (line);
-		}
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
+			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+		if (bytes_read == 0 && *line)
+			return (line);
+		else if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 		{
 			free(line);
 			return (NULL);

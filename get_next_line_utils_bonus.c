@@ -6,14 +6,14 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 21:40:33 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 16:45:05 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
 char	*ft_strjoin(char const *s1, char const *s2, int free_s1);
-size_t	ft_strlen(char *str);
+size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 void	*ft_calloc(size_t count, size_t size);
@@ -41,7 +41,7 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 	return (joined);
 }
 
-size_t	ft_strlen(char *str)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
@@ -53,14 +53,14 @@ size_t	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strndup(const char *s1, size_t size)
 {
 	char	*duplicate;
 
-	duplicate = ft_calloc((ft_strlen((char *)s1) + 1), sizeof(char));
+	duplicate = ft_calloc(size, sizeof(char));
 	if (!duplicate)
 		return (NULL);
-	ft_strlcpy(duplicate, s1, ft_strlen((char *)s1) + 1);
+	ft_strlcpy(duplicate, s1, size);
 	return (duplicate);
 }
 
@@ -89,7 +89,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 	i = 0;
 	if (!count || !size)
-		return (malloc(1));
+		return (malloc(0));
 	ptr = malloc(count * size);
 	if (!ptr)
 		return (NULL);

@@ -6,33 +6,45 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 21:46:31 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 16:45:50 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char				*get_next_line(int fd);
-static char			*agglutinate(int fd, char *g_lst_files, char *line);
-char				*ft_strchr(const char *s, int c);
-
-void				ft_bzero(void *s, unsigned int n);
+char	*get_next_line(int fd);
+char	*agglutinate(int fd, char *g_lst_files, char *line);
+char	*ft_strchr(const char *s, int c);
+void	ft_bzero(void *s, unsigned int n);
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	g_lst_files[(BUFFER_SIZE + 1) * 123] = "";
+	static char	g_lst_files[(BUFFER_SIZE + 1) * FD_MAX] = "";
+	char		*current;
+	char		*remainder;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
-	line = ft_strdup(g_lst_files + (fd * (BUFFER_SIZE + 1)));
+	remainder = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
+	line = ft_strndup(current, ft_strchr(current, '\n') - current + 1);
 	if (!line)
 		return (NULL);
-	line = agglutinate(fd, g_lst_files + (fd * (BUFFER_SIZE + 1)), line);
+	if (ft_strchr(line, '\n'))
+	{
+		ft_strlcpy(remainder, ft_strchr(line, '\n'),
+			ft_strlen(ft_strchr(line, '\n')) + 1);
+	}
+	ft_bzero(current, BUFFER_SIZE + 1);
+	line = agglutinate(fd, current, line);
+	if (*remainder)
+		ft_strlcpy(current, remainder, ft_strlen(remainder) + 1);
+	free(remainder);
 	return (line);
 }
 
-static char	*agglutinate(int fd, char *g_lst_files, char *line)
+char	*agglutinate(int fd, char *g_lst_files, char *line)
 {
 	size_t	bytes_read;
 
@@ -40,19 +52,17 @@ static char	*agglutinate(int fd, char *g_lst_files, char *line)
 	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
 		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
-		if (bytes_read == 0 && *line)
-		{
-			ft_bzero(g_lst_files, BUFFER_SIZE);
-			return (line);
-		}
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
+			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+		if (bytes_read == 0 && *line)
+			return (line);
+		else if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 		{
-			ft_bzero(g_lst_files, BUFFER_SIZE);
 			free(line);
 			return (NULL);
 		}
 		line = ft_strjoin(line, g_lst_files, 1);
-		ft_bzero(g_lst_files, BUFFER_SIZE);
+		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 		if (!line)
 			return (NULL);
 	}

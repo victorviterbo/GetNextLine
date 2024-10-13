@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/11 18:34:04 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 15:26:15 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 # define GET_NEXT_LINE_H
 
 # include <stdlib.h>
-# include <stddef.h>
 # include <unistd.h>
 
 char	*get_next_line(int fd);
+char	*agglutinate(int fd, char *g_lst_files, char *line);
 char	*ft_strchr(const char *s, int c);
+void	ft_bzero(void *s, unsigned int n);
 char	*ft_strjoin(char const *s1, char const *s2, int free_s1);
-size_t	ft_strlen(char *str);
+size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 void	*ft_calloc(size_t count, size_t size);
