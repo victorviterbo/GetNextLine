@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:51:31 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 15:37:58 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:34:41 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef FD_MAX
-#  define FD_MAX 13
+#  define FD_MAX 1024
 # endif
 
 char	*get_next_line(int fd);
