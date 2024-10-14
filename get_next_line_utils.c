@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 12:41:56 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:55:06 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,11 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 	char	*joined;
 	size_t	s2len;
 
-	printf("YAKEKUN ?\n");
-	printf("HELLO %p, %p?\n", s1, s2);
 	if (ft_strchr(s2, '\n'))
 		s2len = (size_t)(ft_strchr(s2, '\n') - s2) + 1;
 	else
 		s2len = ft_strlen(s2);
-	printf("OK ?\n");
 	joined = ft_calloc(ft_strlen(s1) + s2len + 1, sizeof(char));
-	printf("WTF ?\n");
 	if (!joined)
 	{
 		if (in_place == 1)
@@ -42,7 +38,6 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 	}
 	ft_memmove(joined, s1, ft_strlen(s1));
 	ft_memmove(joined + ft_strlen(s1), s2, s2len);
-	printf("WTF ?\n");
 	*(joined + ft_strlen(s1) + s2len) = '\0';
 	if (in_place == 1)
 		free((void *)s1);
