@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 15:43:06 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:41:56 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,23 @@
 char	*ft_strjoin(char const *s1, char const *s2, int free_s1);
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+void	*ft_memmove(void *dst, const void *src, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 
 char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 {
-	char			*joined;
+	char	*joined;
+	size_t	s2len;
 
-	joined = ft_calloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1,
-			sizeof(char));
+	printf("YAKEKUN ?\n");
+	printf("HELLO %p, %p?\n", s1, s2);
+	if (ft_strchr(s2, '\n'))
+		s2len = (size_t)(ft_strchr(s2, '\n') - s2) + 1;
+	else
+		s2len = ft_strlen(s2);
+	printf("OK ?\n");
+	joined = ft_calloc(ft_strlen(s1) + s2len + 1, sizeof(char));
+	printf("WTF ?\n");
 	if (!joined)
 	{
 		if (in_place == 1)
@@ -32,8 +40,10 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 			free((void *)s2);
 		return (NULL);
 	}
-	ft_strlcpy(joined, s1, ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
-	ft_strlcpy(joined + ft_strlen((char *)s1), s2, ft_strlen((char *)s2) + 1);
+	ft_memmove(joined, s1, ft_strlen(s1));
+	ft_memmove(joined + ft_strlen(s1), s2, s2len);
+	printf("WTF ?\n");
+	*(joined + ft_strlen(s1) + s2len) = '\0';
 	if (in_place == 1)
 		free((void *)s1);
 	else if (in_place == 2)
@@ -53,32 +63,42 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strndup(const char *s1, size_t size)
 {
 	char	*duplicate;
 
-	duplicate = ft_calloc((ft_strlen((char *)s1) + 1), sizeof(char));
+	duplicate = ft_calloc(size, sizeof(char));
 	if (!duplicate)
 		return (NULL);
-	ft_strlcpy(duplicate, s1, ft_strlen((char *)s1) + 1);
+	ft_memmove(duplicate, s1, size);
 	return (duplicate);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+void	*ft_memmove(void *dst, const void *src, size_t n)
 {
-	size_t	i;
+	int						i;
 
-	i = 0;
-	while (*(src + i) && i + 1 < dstsize)
+	if (!dst || ! src)
+		return (NULL);
+	if (src < dst && dst < src + n)
 	{
-		*(dst + i) = *(src + i);
-		i++;
+		i = n - 1;
+		while (i + 1)
+		{
+			*((unsigned char *)dst + i) = *((unsigned char *)src + i);
+			i--;
+		}
 	}
-	if (dstsize)
-		*(dst + i) = '\0';
-	while (*(src + i))
-		i++;
-	return (i);
+	else
+	{
+		i = 0;
+		while ((size_t)i < n)
+		{
+			*((unsigned char *)dst + i) = *((unsigned char *)src + i);
+			i++;
+		}	
+	}
+	return (dst);
 }
 
 void	*ft_calloc(size_t count, size_t size)
@@ -89,7 +109,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 	i = 0;
 	if (!count || !size)
-		return (malloc(1));
+		return (malloc(0));
 	ptr = malloc(count * size);
 	if (!ptr)
 		return (NULL);

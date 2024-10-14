@@ -6,40 +6,50 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 12:15:40 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:01:39 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*ft_strjoin(char const *s1, char const *s2, int free_s1);
+char	*ft_strjoin(char const *s1, char const *s);
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 void	*ft_memmove(void *dst, const void *src, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 
-char	*ft_strjoin(char const *s1, char const *s2, int in_place)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
+	size_t	s2len;
 
-	joined = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1,
-			sizeof(char));
+	//printf("YAKEKUN ?\n");
+	printf("\n\n\nS1 STRING IS \n>%s<\n\n\n", s1);
+	printf("\n\n\nS2 STRING IS \n>%s<\n\n\n", s2);
+	//printf("HELLO %p, %p?\n", s1, s2);
+	if (ft_strchr(s2, '\n'))
+		s2len = (size_t)(ft_strchr(s2, '\n') - s2) + 1;
+	else
+		s2len = ft_strlen(s2);
+	//printf("OK ?\n");
+	joined = ft_calloc(ft_strlen(s1) + s2len + 1, sizeof(char));
+	printf("ALLOCATED %zu ?\n", ft_strlen(s1) + s2len + 1);
 	if (!joined)
 	{
-		if (in_place == 1)
-			free((void *)s1);
-		else if (in_place == 2)
-			free((void *)s2);
+		free((void *)s1);
 		return (NULL);
 	}
 	ft_memmove(joined, s1, ft_strlen(s1));
-	ft_memmove(joined + ft_strlen(s1), s2, ft_strlen(s2));
-	*(joined + ft_strlen(s1) + ft_strlen(s2)) = '\0';
-	//printf("STRLEN OF JOINED IS %zu\n", ft_strlen(joined));
-	if (in_place == 1)
-		free((void *)s1);
-	else if (in_place == 2)
-		free((void *)s2);
+	ft_memmove(joined + ft_strlen(s1), s2, s2len);
+	//printf("WTF ?\n");
+	*(joined + ft_strlen(s1) + s2len) = '\0';
+	free((void *)s1);
+	printf("\n\n\nTHE JOINED STRING IS \n>%s<\n\n\n", joined);
+	if (!('A' <= *joined && *joined <= 'Z'))
+	{
+		//printf("ERRORRRRRRRRRR :(((((((((\n");
+		return (NULL);
+	}
 	return (joined);
 }
 

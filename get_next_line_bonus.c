@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 12:20:58 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:07:33 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,54 +23,23 @@ char	*get_next_line(int fd)
 	static char	g_lst_files[(BUFFER_SIZE + 1) * FD_MAX] = "";
 	char		*current;
 	char		*end;
-	//size_t		linelen;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
-	//printf("HELLO !\n");
 	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
 	end = g_lst_files + ((fd + 1) * (BUFFER_SIZE + 1)) - 1;
-	if (ft_strchr(current, '\n'))
+	/*if (ft_strchr(current, '\n'))
 	{
-		//printf("COUCOU !\n");
-		//linelen = ft_strchr(current, '\n') - current + 1;
-		//if (linelen > BUFFER_SIZE + 1)
-		//	return (NULL);
-		//printf("WTF !\n");
-		//printf("chars are %c, %c, %c, linelen is %zu\n", *(ft_strchr(current, '\n') - 1), *ft_strchr(current, '\n'), *(ft_strchr(current, '\n') + 1), linelen);
 		line = ft_strndup(current, ft_strchr(current, '\n') - current + 2);
-		*(line + (int)(ft_strchr(current, '\n') - current + 1)) = '\0';
 		if (!line)
 			return (NULL);
-
-		//printf("HERE ?\n");
+		*(line + (int)(ft_strchr(current, '\n') - current + 1)) = '\0';
 		ft_memmove(current, ft_strchr(current, '\n') + 1,
 			ft_strlen(ft_strchr(current, '\n')) + 1);
-		//printf("OR HERE ?\n");
-		//ft_bzero(current + ft_strlen(current),
-		//	BUFFER_SIZE - ft_strlen(ft_strchr(current, '\n') + 1));
-		//printf("PAS COMPRIS ?\n");
 		return (line);
-	}
-	/*
-	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
-		return (NULL);
-	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
-	if (ft_strchr(current, '\n'))
-	{
-		linelen = ft_strchr(current, '\n') - current + 2;
-		printf("chars are %c, %c, %c, linelen is %zu\n", *(ft_strchr(current, '\n') - 1), *ft_strchr(current, '\n'), *(ft_strchr(current, '\n') + 1), linelen);
-		line = ft_strndup(current, linelen);
-		if (!line)
-			return (NULL);
-		ft_memmove(current, ft_strchr(current, '\n') + 1,
-			BUFFER_SIZE - (int)(ft_strchr(current, '\n') - current) + 1);
-		ft_bzero(current + 1 + ft_strlen(current),
-			BUFFER_SIZE + 1 - linelen);
-		return (line);
-	}
-	*/
+	}*/
 	line = ft_strndup(current, ft_strlen(current) + 1);
+	printf("\n\n\nLINE STRING IS \n>%s<\n\n\n", line);
 	if (!line)
 		return (NULL);
 	ft_bzero(current, BUFFER_SIZE + 1);
@@ -85,6 +54,7 @@ char	*agglutinate(int fd, char *g_lst_files, char *line)
 	bytes_read = 1;
 	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
 	{
+		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
 			ft_bzero(g_lst_files, BUFFER_SIZE + 1);
@@ -95,14 +65,14 @@ char	*agglutinate(int fd, char *g_lst_files, char *line)
 			free(line);
 			return (NULL);
 		}
-		line = ft_strjoin(line, g_lst_files, 1);
-		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+		line = ft_strjoin(line, g_lst_files);
 		if (!line)
 			return (NULL);
 	}
-	ft_memmove(g_lst_files, ft_strchr(line, '\n') + 1,
+	ft_memmove(g_lst_files, ft_strchr(g_lst_files, '\n') + 1,
 		ft_strlen(ft_strchr(line, '\n') + 1));
 	*(ft_strchr(line, '\n') + 1) = '\0';
+	//printf("\n\ng_lst_files STRING IS \n>%s<\n\n\n", g_lst_files);
 	return (line);
 }
 
