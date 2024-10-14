@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 21:58:39 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:15:40 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 {
 	char	*joined;
 
-	joined = ft_calloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1,
+	joined = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1,
 			sizeof(char));
 	if (!joined)
 	{
@@ -32,8 +32,10 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 			free((void *)s2);
 		return (NULL);
 	}
-	ft_memmove(joined, s1, ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
-	ft_memmove(joined + ft_strlen((char *)s1), s2, ft_strlen((char *)s2) + 1);
+	ft_memmove(joined, s1, ft_strlen(s1));
+	ft_memmove(joined + ft_strlen(s1), s2, ft_strlen(s2));
+	*(joined + ft_strlen(s1) + ft_strlen(s2)) = '\0';
+	//printf("STRLEN OF JOINED IS %zu\n", ft_strlen(joined));
 	if (in_place == 1)
 		free((void *)s1);
 	else if (in_place == 2)
