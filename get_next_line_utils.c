@@ -6,13 +6,13 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 14:55:06 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:25:35 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strjoin(char const *s1, char const *s2, int free_s1);
+char	*ft_strjoin(char const *s1, char const *s2, int in_place);
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 void	*ft_memmove(void *dst, const void *src, size_t n);
@@ -28,21 +28,16 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 	else
 		s2len = ft_strlen(s2);
 	joined = ft_calloc(ft_strlen(s1) + s2len + 1, sizeof(char));
-	if (!joined)
+	if (!joined && in_place)
 	{
-		if (in_place == 1)
-			free((void *)s1);
-		else if (in_place == 2)
-			free((void *)s2);
+		free((void *)s1);
 		return (NULL);
 	}
 	ft_memmove(joined, s1, ft_strlen(s1));
 	ft_memmove(joined + ft_strlen(s1), s2, s2len);
 	*(joined + ft_strlen(s1) + s2len) = '\0';
-	if (in_place == 1)
+	if (in_place)
 		free((void *)s1);
-	else if (in_place == 2)
-		free((void *)s2);
 	return (joined);
 }
 
@@ -62,6 +57,8 @@ char	*ft_strndup(const char *s1, size_t size)
 {
 	char	*duplicate;
 
+	if (size < 0 || !s1)
+		return (NULL);
 	duplicate = ft_calloc(size, sizeof(char));
 	if (!duplicate)
 		return (NULL);
@@ -73,7 +70,7 @@ void	*ft_memmove(void *dst, const void *src, size_t n)
 {
 	int						i;
 
-	if (!dst || ! src)
+	if (!dst || ! src || n < 0)
 		return (NULL);
 	if (src < dst && dst < src + n)
 	{

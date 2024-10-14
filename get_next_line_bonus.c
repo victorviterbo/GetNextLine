@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 15:19:02 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:26:45 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
 	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
-	//printf("1\n");
 	line = ft_calloc(1, sizeof(char));
 	if (!line)
 		return (NULL);
@@ -34,13 +33,9 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (NULL);
 	if (!ft_strchr(line, '\n'))
-		//printf("10\n");
-		//printf("LINE IS \n%s\n", line);
 		line = agglutinate(fd, current, line);
-	//printf("20\n");
 	ft_memmove(current, ft_strchr(current, '\n') + 1,
 		ft_strlen(ft_strchr(current, '\n')));
-	//printf("30\n");
 	return (line);
 }
 
@@ -61,13 +56,10 @@ char	*agglutinate(int fd, char *current, char *line)
 			return (NULL);
 		}
 		*(current + bytes_read) = '\0';
-		//printf(" + LINE IS \n%s\n", line);	
 		line = ft_strjoin(line, current, 1);
-		//printf(" - LINE IS \n%s\n", line);	
 		if (!line)
 			return (NULL);
 	}
-	//*(ft_strchr(line, '\n') + 1) = '\0';
 	return (line);
 }
 

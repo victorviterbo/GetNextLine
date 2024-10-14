@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 15:18:52 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:26:11 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 	else
 		s2len = ft_strlen(s2);
 	joined = ft_calloc(ft_strlen(s1) + s2len + 1, sizeof(char));
-	//printf("ALLOCATED %zu ?\n", ft_strlen(s1) + s2len + 1);
 	if (!joined && in_place)
 	{
 		free((void *)s1);
@@ -59,10 +58,7 @@ char	*ft_strndup(const char *s1, size_t size)
 	char	*duplicate;
 
 	if (size < 0 || !s1)
-	{
-		printf("HOUSTON WE GOT A PROBLEM\n\n\n\n");
 		return (NULL);
-	}
 	duplicate = ft_calloc(size, sizeof(char));
 	if (!duplicate)
 		return (NULL);

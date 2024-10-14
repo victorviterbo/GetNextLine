@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 12:32:30 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:25:29 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,16 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line = ft_strdup(g_lst_files);
-	ft_bzero(g_lst_files, BUFFER_SIZE + 1);
+	line = ft_calloc(1, sizeof(char));
 	if (!line)
 		return (NULL);
-	line = agglutinate(fd, g_lst_files, line);
+	line = ft_strjoin(line, g_lst_files, 1);
+	if (!line)
+		return (NULL);
+	if (!ft_strchr(line, '\n'))
+		line = agglutinate(fd, g_lst_files, line);
+	ft_memmove(g_lst_files, ft_strchr(g_lst_files, '\n') + 1,
+		ft_strlen(ft_strchr(g_lst_files, '\n')));
 	return (line);
 }
 
@@ -36,8 +41,7 @@ char	*agglutinate(int fd, char *g_lst_files, char *line)
 {
 	size_t	bytes_read;
 
-	bytes_read = 1;
-	while (ft_strchr(line, '\n') == NULL && bytes_read > 0)
+	while (ft_strchr(line, '\n') == NULL)
 	{
 		bytes_read = read(fd, g_lst_files, BUFFER_SIZE);
 		if (bytes_read <= 0 || bytes_read > BUFFER_SIZE)
@@ -49,14 +53,11 @@ char	*agglutinate(int fd, char *g_lst_files, char *line)
 			free(line);
 			return (NULL);
 		}
+		*(g_lst_files + bytes_read) = '\0';
 		line = ft_strjoin(line, g_lst_files, 1);
-		ft_bzero(g_lst_files, BUFFER_SIZE + 1);
 		if (!line)
 			return (NULL);
 	}
-	ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
-		ft_strlen(ft_strchr(line, '\n')));
-	*(ft_strchr(line, '\n') + 1) = '\0';
 	return (line);
 }
 
