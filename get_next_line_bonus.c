@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 21:35:32 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 22:51:59 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,26 @@ char	*get_next_line(int fd)
 	char		*current;
 	size_t		linelen;
 
+	/*if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
+		return (NULL);
+	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
+	if (ft_strchr(current, '\n'))
+	{
+		linelen = ft_strchr(current, '\n') - current + 2;
+	*/
+
+
 	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
 	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
 	if (ft_strchr(current, '\n'))
 	{
 		linelen = ft_strchr(current, '\n') - current + 2;
-		printf("chars are %c, %c, %c\n", *(ft_strchr(current, '\n') - 1), *ft_strchr(current, '\n'), *(ft_strchr(current, '\n') + 1));
+		printf("chars are %c, %c, %c, linelen is %zu\n", *(ft_strchr(current, '\n') - 1), *ft_strchr(current, '\n'), *(ft_strchr(current, '\n') + 1), linelen);
 		line = ft_strndup(current, linelen);
 		if (!line)
 			return (NULL);
-		ft_strlcpy(current, ft_strchr(current, '\n') + 1,
+		ft_memmove(current, ft_strchr(current, '\n') + 1,
 			BUFFER_SIZE - (int)(ft_strchr(current, '\n') - current) + 1);
 		ft_bzero(current + 1 + ft_strlen(current),
 			BUFFER_SIZE + 1 - linelen);
@@ -70,7 +79,7 @@ char	*agglutinate(int fd, char *g_lst_files, char *line)
 		if (!line)
 			return (NULL);
 	}
-	ft_strlcpy(g_lst_files, ft_strchr(line, '\n') + 1,
+	ft_memmove(g_lst_files, ft_strchr(line, '\n') + 1,
 		ft_strlen(ft_strchr(line, '\n')));
 	*(ft_strchr(line, '\n') + 1) = '\0';
 	return (line);

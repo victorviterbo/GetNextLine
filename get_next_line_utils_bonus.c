@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 21:29:41 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/13 18:47:57 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/13 21:58:39 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 char	*ft_strjoin(char const *s1, char const *s2, int free_s1);
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+void	*ft_memmove(void *dst, const void *src, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 
 char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 {
-	char			*joined;
+	char	*joined;
 
 	joined = ft_calloc(ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1,
 			sizeof(char));
@@ -32,8 +32,8 @@ char	*ft_strjoin(char const *s1, char const *s2, int in_place)
 			free((void *)s2);
 		return (NULL);
 	}
-	ft_strlcpy(joined, s1, ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
-	ft_strlcpy(joined + ft_strlen((char *)s1), s2, ft_strlen((char *)s2) + 1);
+	ft_memmove(joined, s1, ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1);
+	ft_memmove(joined + ft_strlen((char *)s1), s2, ft_strlen((char *)s2) + 1);
 	if (in_place == 1)
 		free((void *)s1);
 	else if (in_place == 2)
@@ -60,27 +60,35 @@ char	*ft_strndup(const char *s1, size_t size)
 	duplicate = ft_calloc(size, sizeof(char));
 	if (!duplicate)
 		return (NULL);
-	ft_strlcpy(duplicate, s1, size);
+	ft_memmove(duplicate, s1, size);
 	return (duplicate);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+void	*ft_memmove(void *dst, const void *src, size_t n)
 {
-	size_t	i;
+	int						i;
 
-	i = 0;
-	if (!src || !dst)
-		return (0);
-	while (*(src + i) && i + 1 < dstsize)
+	if (!dst || ! src)
+		return (NULL);
+	if (src < dst && dst < src + n)
 	{
-		*(dst + i) = *(src + i);
-		i++;
+		i = n - 1;
+		while (i + 1)
+		{
+			*((unsigned char *)dst + i) = *((unsigned char *)src + i);
+			i--;
+		}
 	}
-	if (dstsize)
-		*(dst + i) = '\0';
-	while (*(src + i))
-		i++;
-	return (i);
+	else
+	{
+		i = 0;
+		while ((size_t)i < n)
+		{
+			*((unsigned char *)dst + i) = *((unsigned char *)src + i);
+			i++;
+		}	
+	}
+	return (dst);
 }
 
 void	*ft_calloc(size_t count, size_t size)
