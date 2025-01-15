@@ -6,7 +6,7 @@
 /*   By: vviterbo <vviterbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 11:48:53 by vviterbo          #+#    #+#             */
-/*   Updated: 2024/10/14 16:15:30 by vviterbo         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:21:57 by vviterbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ void	ft_bzero(void *s, unsigned int n);
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	g_lst_files[(BUFFER_SIZE + 1) * FD_MAX] = "";
+	static char	g_lst_files[FD_MAX][(BUFFER_SIZE + 1)];
 	char		*current;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
-	current = g_lst_files + (fd * (BUFFER_SIZE + 1));
+	current = g_lst_files[fd];
 	line = ft_calloc(1, sizeof(char));
 	if (!line)
 		return (NULL);
